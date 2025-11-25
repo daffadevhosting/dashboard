@@ -3,20 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js AI Dashboard</title>
+    <title>User Dashboard & API Status</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom scrollbar style for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background-color: #4f46e5;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background-color: #4f46e5; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -27,7 +19,7 @@
 
         <div id="login-page" class="flex-grow flex items-center justify-center p-4">
             <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
-                <h2 class="text-3xl font-bold text-indigo-400 mb-6 text-center">AI Project Login</h2>
+                <h2 class="text-3xl font-bold text-indigo-400 mb-6 text-center">User Login</h2>
                 <form id="login-form" class="space-y-4">
                     <div>
                         <label for="login-username" class="block text-sm font-medium text-gray-300">Username</label>
@@ -72,7 +64,7 @@
         <div id="dashboard-page" class="hidden flex-grow">
             <header class="bg-gray-800 shadow-md">
                 <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                    <h1 class="text-2xl font-bold text-indigo-400">Three.js AI Generator Dashboard</h1>
+                    <h1 class="text-2xl font-bold text-indigo-400">User Dashboard & Token Usage</h1>
                     <div class="flex items-center space-x-4">
                         <span class="text-sm font-medium text-gray-300">Tokens: <span id="token-balance" class="text-yellow-400 font-bold">...</span></span>
                         <button id="logout-button" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium transition duration-150">
@@ -86,55 +78,21 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                     <div class="lg:col-span-1 bg-gray-800 p-6 rounded-lg shadow-lg h-fit sticky top-6">
-                        <h3 class="text-xl font-semibold mb-4 text-indigo-300">Generate New Project</h3>
-                        <form id="project-form" class="space-y-4">
-                            <div>
-                                <label for="projectType" class="block text-sm font-medium text-gray-300">Type</label>
-                                <select id="projectType" required class="mt-1 block w-full py-2 px-3 border border-gray-600 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-100">
-                                    <option value="portfolio">Portfolio</option>
-                                    <option value="game">Game</option>
-                                    <option value="product-showcase">Product Showcase</option>
-                                    <option value="arch-viz">Architectural Visualization</option>
-                                    <option value="custom">Custom</option>
-                                </select>
+                        <h3 class="text-xl font-semibold mb-4 text-indigo-300">User Profile</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
+                                <span class="text-sm font-medium text-gray-400">Username:</span>
+                                <span id="user-username" class="text-md font-semibold text-gray-100">Loading...</span>
                             </div>
-                            <div>
-                                <label for="complexity" class="block text-sm font-medium text-gray-300">Complexity</label>
-                                <select id="complexity" required class="mt-1 block w-full py-2 px-3 border border-gray-600 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-100">
-                                    <option value="basic">Basic</option>
-                                    <option value="intermediate">Intermediate</option>
-                                    <option value="advanced">Advanced</option>
-                                </select>
+                            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
+                                <span class="text-sm font-medium text-gray-400">Email:</span>
+                                <span id="user-email" class="text-md font-semibold text-gray-100">Loading...</span>
                             </div>
-                            <div>
-                                <label for="style" class="block text-sm font-medium text-gray-300">Style</label>
-                                <select id="style" required class="mt-1 block w-full py-2 px-3 border border-gray-600 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-100">
-                                    <option value="minimalist">Minimalist</option>
-                                    <option value="realistic">Realistic</option>
-                                    <option value="cartoon">Cartoon</option>
-                                    <option value="futuristic">Futuristic</option>
-                                    <option value="abstract">Abstract</option>
-                                </select>
+                            <div class="flex justify-between items-center pb-2">
+                                <span class="text-sm font-medium text-gray-400">Current Balance:</span>
+                                <span id="user-token-balance-summary" class="text-xl font-bold text-yellow-400">...</span>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-300">Features</label>
-                                <div class="mt-2 space-y-2">
-                                    <div class="flex items-center"><input type="checkbox" id="feature-animation" value="animation" class="h-4 w-4 text-indigo-600 border-gray-600 rounded bg-gray-700"><label for="feature-animation" class="ml-2 text-sm text-gray-300">Animation</label></div>
-                                    <div class="flex items-center"><input type="checkbox" id="feature-lighting" value="lighting" class="h-4 w-4 text-indigo-600 border-gray-600 rounded bg-gray-700"><label for="feature-lighting" class="ml-2 text-sm text-gray-300">Lighting</label></div>
-                                    <div class="flex items-center"><input type="checkbox" id="feature-textures" value="textures" class="h-4 w-4 text-indigo-600 border-gray-600 rounded bg-gray-700"><label for="feature-textures" class="ml-2 text-sm text-gray-300">Textures</label></div>
-                                    <div class="flex items-center"><input type="checkbox" id="feature-physics" value="physics" class="h-4 w-4 text-indigo-600 border-gray-600 rounded bg-gray-700"><label for="feature-physics" class="ml-2 text-sm text-gray-300">Physics</label></div>
-                                    <div class="flex items-center"><input type="checkbox" id="feature-particles" value="particles" class="h-4 w-4 text-indigo-600 border-gray-600 rounded bg-gray-700"><label for="feature-particles" class="ml-2 text-sm text-gray-300">Particles</label></div>
-                                    <div class="flex items-center"><input type="checkbox" id="feature-vr" value="vr-support" class="h-4 w-4 text-indigo-600 border-gray-600 rounded bg-gray-700"><label for="feature-vr" class="ml-2 text-sm text-gray-300">VR Support</label></div>
-                                </div>
-                            </div>
-                            <div>
-                                <label for="description" class="block text-sm font-medium text-gray-300">Description (Max 1000 chars)</label>
-                                <textarea id="description" rows="4" required maxlength="1000" class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                            </div>
-                            <button type="submit" id="generate-btn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150" disabled>
-                                Generate Project (Login to Enable)
-                            </button>
-                        </form>
+                        </div>
                     </div>
 
                     <div class="lg:col-span-2 space-y-6">
@@ -152,9 +110,9 @@
                         </div>
 
                         <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                            <h3 class="text-xl font-semibold mb-4 text-green-300">My Projects</h3>
-                            <div id="projects-list" class="space-y-4">
-                                <p class="text-gray-400">Loading Projects...</p>
+                            <h3 class="text-xl font-semibold mb-4 text-green-300">Token Usage History</h3>
+                            <div id="usage-history-list" class="space-y-4">
+                                <p class="text-gray-400">Loading Usage History...</p>
                             </div>
                         </div>
                     </div>
@@ -162,34 +120,8 @@
             </main>
         </div>
     </div>
-
-    <div id="project-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-80 z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
-            <div class="p-4 flex justify-between items-center border-b border-gray-700">
-                <h3 id="modal-title" class="text-2xl font-bold text-indigo-400">Project Name</h3>
-                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-100">&times;</button>
-            </div>
-            <div class="p-4 flex-grow overflow-hidden">
-                <div class="flex border-b border-gray-700 space-x-2">
-                    <button data-file="index.html" class="tab-button px-4 py-2 text-sm font-medium rounded-t-lg bg-indigo-600 text-white">index.html</button>
-                    <button data-file="app.js" class="tab-button px-4 py-2 text-sm font-medium rounded-t-lg text-gray-300 hover:bg-gray-700">app.js</button>
-                    <button data-file="style.css" class="tab-button px-4 py-2 text-sm font-medium rounded-t-lg text-gray-300 hover:bg-gray-700">style.css</button>
-                    <button data-file="package.json" class="tab-button px-4 py-2 text-sm font-medium rounded-t-lg text-gray-300 hover:bg-gray-700">package.json</button>
-                    <button data-file="README.md" class="tab-button px-4 py-2 text-sm font-medium rounded-t-lg text-gray-300 hover:bg-gray-700">README.md</button>
-                </div>
-                <div id="code-content-container" class="mt-4 h-full pb-4">
-                    <pre id="code-content" class="bg-gray-900 p-4 rounded-b-lg rounded-r-lg text-sm overflow-auto max-h-[60vh] text-green-400 font-mono"></pre>
-                </div>
-            </div>
-            <div class="p-4 border-t border-gray-700 flex justify-end space-x-2">
-                <p id="modal-usage" class="text-sm text-gray-400 mr-auto flex items-center"></p>
-                <a id="download-zip-link" href="#" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-sm font-medium text-white transition duration-150">Download Zip</a>
-            </div>
-        </div>
-    </div>
     
     <script>
-        // Set the backend URL once for all scripts to use
         window.BACKEND_URL = 'https://threejs-ai-backend.harisudahmalam.workers.dev';
     </script>
     <script src="auth.js"></script>
