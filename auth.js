@@ -14,11 +14,6 @@ const notificationArea = document.getElementById('notification-area');
 
 // --- Utility Functions ---
 
-/**
- * Shows a notification toast.
- * @param {string} message The message to display.
- * @param {'success'|'error'} type The type of notification.
- */
 function showNotification(message, type) {
     const color = type === 'success' ? 'bg-green-500' : 'bg-red-500';
     const notification = document.createElement('div');
@@ -27,7 +22,6 @@ function showNotification(message, type) {
     
     notificationArea.appendChild(notification);
 
-    // Auto-remove after 4 seconds
     setTimeout(() => {
         notification.classList.add('opacity-0', 'translate-x-full');
         notification.addEventListener('transitionend', () => notification.remove());
@@ -42,32 +36,33 @@ function showView(viewId) {
 
     const view = document.getElementById(viewId);
     if (view) {
+        // NOTE: We use flex on the dashboard page for sticky columns
         view.classList.remove('hidden');
+        if (viewId === 'dashboard-page') {
+             view.classList.add('flex-grow'); 
+        } else {
+             view.classList.add('flex-grow', 'flex'); 
+        }
     }
 }
 
 function checkAuthAndRoute() {
     const token = localStorage.getItem('user_token');
     if (token) {
-        // User is logged in, show dashboard
         showView('dashboard-page');
-        // Call dashboard initialization from dashboard.js
         window.initializeDashboard();
     } else {
-        // User is not logged in, show login page
         showView('login-page');
     }
 }
 
 // --- Event Handlers ---
 
-// Switch to Register page
 switchToRegisterBtn.addEventListener('click', (e) => {
     e.preventDefault();
     showView('register-page');
 });
 
-// Switch to Login page
 switchToLoginBtn.addEventListener('click', (e) => {
     e.preventDefault();
     showView('login-page');
@@ -94,9 +89,10 @@ registerForm.addEventListener('submit', async (e) => {
 
         if (response.ok && data.success) {
             showNotification('Registration successful! Logging in...', 'success');
-            // Auto-login after successful registration
-            localStorage.setItem('user_token', data.user.id); // The backend uses the ID as the token
+            localStorage.setItem('user_token', data.user.id);
             localStorage.setItem('api_key', data.apiKey);
+            localStorage.setItem('user_username', data.user.username);
+            localStorage.setItem('user_email', data.user.email);
             checkAuthAndRoute();
         } else {
             showNotification(`Registration failed: ${data.error || 'Unknown error'}`, 'error');
@@ -132,6 +128,8 @@ loginForm.addEventListener('submit', async (e) => {
         if (response.ok && data.success) {
             localStorage.setItem('user_token', data.user.id);
             localStorage.setItem('api_key', data.apiKey);
+            localStorage.setItem('user_username', data.user.username);
+            localStorage.setItem('user_email', data.user.email);
             showNotification('Login successful!', 'success');
             checkAuthAndRoute();
         } else {
@@ -150,14 +148,14 @@ loginForm.addEventListener('submit', async (e) => {
 logoutButton.addEventListener('click', () => {
     localStorage.removeItem('user_token');
     localStorage.removeItem('api_key');
+    localStorage.removeItem('user_username');
+    localStorage.removeItem('user_email');
     showNotification('Logged out successfully.', 'success');
     checkAuthAndRoute();
 });
 
 
-// Export showNotification and checkAuthAndRoute for use in dashboard.js
 window.showNotification = showNotification;
 window.checkAuthAndRoute = checkAuthAndRoute;
 
-// Initial check on page load
 document.addEventListener('DOMContentLoaded', checkAuthAndRoute);
