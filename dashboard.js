@@ -168,7 +168,10 @@ createKeyBtn.addEventListener('click', async () => {
 // --- Initialization ---
 window.initializeDashboard = function() {
     loadUserProfile();
-    updateTokenBalance();
-    loadTokenUsageHistory();
-    loadApiKeys();
+    setTimeout(() => {
+        updateTokenBalance().then(() => {
+            loadApiKeys();
+            loadTokenUsageHistory();
+        });
+    }, 300); // Delay 300ms
 };
